@@ -2,7 +2,8 @@
 # Olex for Cows – Agent Specification (Mobile-First, Fully Responsive)
 
 ## 0. Platform & UX Principles
-
+Technology Nextjs Neon postgres drizzle orm fireabsae email then the cloudinary for video and photo storege 
+netlify for hosting 
 ### Primary Platform
 
 * **Mobile-first design**
@@ -181,10 +182,7 @@ AI-powered breed and disease identification.
 
 ## Gemini Integration
 
-* If premium feature:
 
-  * Payment via Gemini
-  * Subscription unlocks:
 
     * Advanced disease detection
     * PDF health report
@@ -370,21 +368,7 @@ Internal chat system:
 
 # 8. Gemini Integration
 
-## Payment Use Cases
-
-1. Premium Breed Scan
-2. Vendor Subscription
-3. Featured Listings
-4. Boost Listing
-5. Ad placement
-
-## Payment Flow
-
-* Select plan
-* Confirm
-* Redirect to Gemini
-* Webhook verification
-* Unlock feature
+we use ai to get free photo to get breed identifciation and deiease idetnifcitaon 
 
 ---
 
@@ -412,5 +396,28 @@ Internal chat system:
 * Multilingual support
 * Fast load (optimize for rural networks)
 * Minimal data usage mode (optional toggle)
+
+
+5. UX Standards
+
+Senior projects define UX quality.
+
+Mobile-first responsive design
+
+Accessible semantic HTML
+
+Loading states required
+
+Error states required
+
+Empty states required
+
+Optimistic UI where appropriate
+
+Keyboard navigation support
+
+Form validation with real-time feedback
+
+
 
 
