@@ -156,7 +156,7 @@ export async function createListing(formData: FormData) {
             milkProduction: rawData.milkProduction ? rawData.milkProduction.toString() : null,
             locationLat: rawData.locationLat ? rawData.locationLat.toString() : null,
             locationLng: rawData.locationLng ? rawData.locationLng.toString() : null,
-            images: rawData.images, // JSON string
+            images: JSON.parse(rawData.images), // Parse back to array because rawData.images was stringified for form data logic above? Wait.
         });
 
         return { success: true };

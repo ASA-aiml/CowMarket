@@ -34,10 +34,10 @@ export default function RootLayout({
         <Sidebar />
         <div className="flex flex-col min-h-screen md:pl-64">
           <MobileHeader />
-          <main className="flex-1 pb-20 md:pb-0">
+          <main className="flex-1 md:pb-0">
             {children}
           </main>
-          <BottomNavBar/>
+          <BottomNavBar />
         </div>
       </body>
     </html>

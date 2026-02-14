@@ -113,7 +113,7 @@ export default function Feed({ initialListings }: FeedProps) {
                 onFilterSelect={handleFilterSelect}
             />
 
-            <div className="max-w-7xl mx-auto px-4 py-6">
+            <div className="max-w-7xl mx-auto px-4 py-6 pb-24 md:pb-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {listings.map((listing, index) => (
                         <ListingCard key={`${listing.id}-${index}`} listing={listing} />
@@ -123,18 +123,30 @@ export default function Feed({ initialListings }: FeedProps) {
                 {/* Loading State / Trigger */}
                 {(hasMore || loading) && (
                     <div ref={ref} className="py-8 flex justify-center">
-                        {loading && <Loader2 className="animate-spin text-blue-600" />}
+                        {loading && <Loader2 className="animate-spin text-primary-600" />}
                     </div>
                 )}
 
                 {!hasMore && listings.length > 0 && (
-                    <div className="text-center py-8 text-gray-500">
-                        You've reached the end!
+                    <div className="relative w-full h-64 mt-8 overflow-hidden flex items-end justify-center pb-20 md:pb-8 -mb-24 md:mb-0 md:rounded-3xl [mask-image:linear-gradient(to_bottom,transparent,black_20%)]">
+
+                        <div className="absolute top-8 left-0 right-0 z-20 flex justify-center">
+                            <span className="text-neutral-600/90 font-bold text-sm uppercase tracking-widest bg-[#fafaf9]/30 px-6 py-2 rounded-full backdrop-blur-[2px]">
+                                You've reached the end! 🐄
+                            </span>
+                        </div>
+
+                        <img
+                            src="/ui-cow.gif"
+                            alt="End of feed"
+                            className="absolute inset-0 w-full h-full object-cover opacity-90"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/80 via-transparent to-transparent" />
                     </div>
                 )}
 
                 {!hasMore && listings.length === 0 && (
-                    <div className="text-center py-12 text-gray-500">
+                    <div className="text-center py-12 text-neutral-500">
                         No listings found. Try adjusting headers.
                     </div>
                 )}

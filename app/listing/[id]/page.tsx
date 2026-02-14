@@ -1,7 +1,8 @@
 import { getListingById } from "@/app/actions/listings";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, MapPin, Share2, Heart, ShieldCheck, Phone, MessageCircle, Calendar } from "lucide-react";
+import { ArrowLeft, MapPin, Share2, Heart, ShieldCheck, Calendar } from "lucide-react";
+import ListingContactActions from "@/components/ListingContactActions";
 
 export const dynamic = "force-dynamic";
 
@@ -24,25 +25,17 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
     if (listing.video) images.unshift(listing.video);
 
     return (
-        <div className="min-h-screen pb-24 md:pl-64">
-            {/* Mobile Header */}
-            <div className="md:hidden fixed top-0 left-0 right-0 z-40 glass-nav p-4 flex justify-between items-center">
-                <Link href="/" className="p-2 -ml-2 rounded-full hover:bg-white/40 transition-colors">
-                    <ArrowLeft className="w-6 h-6 text-gray-800" />
-                </Link>
-                <div className="flex gap-2">
-                    <button className="p-2 rounded-full hover:bg-white/40 transition-colors">
-                        <Share2 className="w-6 h-6 text-gray-800" />
-                    </button>
-                    <button className="p-2 rounded-full hover:bg-white/40 transition-colors">
-                        <Heart className="w-6 h-6 text-gray-800" />
-                    </button>
-                </div>
-            </div>
+        <div className="min-h-screen pb-24">
 
             <main className="max-w-4xl mx-auto md:p-6 md:pt-8 glass-card md:mt-4 overflow-hidden">
                 {/* Media Section */}
-                <div className="relative aspect-video bg-black/5 md:rounded-xl overflow-hidden mt-14 md:mt-0">
+                <div className="relative aspect-video bg-black/5 md:rounded-xl overflow-hidden">
+                    {/* Back Button Overlay */}
+                    <div className="absolute top-4 left-4 z-20 md:hidden">
+                        <Link href="/" className="p-2 bg-white/50 backdrop-blur-md rounded-full text-gray-900 shadow-sm block hover:bg-white/80 transition-colors">
+                            <ArrowLeft size={20} />
+                        </Link>
+                    </div>
                     {listing.video ? (
                         <video
                             src={listing.video}
@@ -131,30 +124,17 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
 
                     <p className="text-xs text-gray-500 text-center flex items-center justify-center gap-1 pb-4">
                         <Calendar className="w-3 h-3" />
-                        Posted on {new Date(listing.createdAt).toLocaleDateString()}
+                        Posted on {new Date(listing.createdAt || Date.now()).toLocaleDateString()}
                     </p>
                 </div>
             </main>
 
-            {/* Sticky Bottom Bar */}
-            <div className="fixed bottom-0 left-0 right-0 md:pl-64 p-4 glass-nav flex gap-3 z-50">
-                <a
-                    href={`tel:${listing.seller?.phone}`}
-                    className="flex-1 flex flex-col items-center justify-center glass-button py-3 rounded-xl font-bold hover:bg-white/60 transition-colors text-gray-900"
-                >
-                    <Phone className="w-5 h-5 mb-0.5" />
-                    <span className="text-xs">Call</span>
-                </a>
-                <a
-                    href={`https://wa.me/${listing.seller?.whatsappNumber}?text=Hi, I'm interested in your ${listing.breed} listing.`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex-[2] flex flex-col items-center justify-center bg-black/80 backdrop-blur-md text-white py-3 rounded-xl font-bold hover:bg-black transition-colors shadow-lg shadow-black/20"
-                >
-                    <MessageCircle className="w-5 h-5 mb-0.5" />
-                    <span className="text-xs">Chat on WhatsApp</span>
-                </a>
-            </div>
+            {/* Client-side Contact Actions */}
+            <ListingContactActions
+                phone={listing.seller?.phone}
+                whatsappNumber={listing.seller?.whatsappNumber}
+                listingTitle={listing.breed || listing.type}
+            />
         </div>
     );
 }
