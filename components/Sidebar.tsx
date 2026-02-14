@@ -1,22 +1,39 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { bottomTabs } from "@/data/nav";
 import { Settings, LogOut, Bell } from "lucide-react";
+import ProfileAvatar from "./ProfileAvatar";
+import { useAuth } from "@/lib/contexts/AuthContext";
+import { signOut } from "@/lib/firebase/auth";
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      router.push("/login");
+    } catch (error) {
+      console.error("Failed to log out:", error);
+    }
+  };
 
   return (
     <aside className="hidden md:flex flex-col w-64 h-screen fixed inset-y-0 left-0 bg-white border-r border-gray-200 z-50">
-      <div className="p-6 border-b border-gray-100 flex items-center gap-3">
-        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
-          O
+      <div className="p-6 border-b border-gray-100">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+            O
+          </div>
+          <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+            OlexCows
+          </span>
         </div>
-        <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
-          OlexCows
-        </span>
+        {user && <ProfileAvatar />}
       </div>
 
       <div className="flex-1 overflow-y-auto py-6 px-4 space-y-1">
@@ -29,18 +46,16 @@ export default function Sidebar() {
             <Link
               key={name}
               href={href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
-                isActive
-                  ? "bg-blue-50 text-blue-600 shadow-sm"
-                  : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
-              }`}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${isActive
+                ? "bg-blue-50 text-blue-600 shadow-sm"
+                : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+                }`}
             >
               <Icon
                 size={22}
                 strokeWidth={isActive ? 2.5 : 2}
-                className={`transition-transform duration-200 ${
-                  isActive ? "scale-110" : "group-hover:scale-110"
-                }`}
+                className={`transition-transform duration-200 ${isActive ? "scale-110" : "group-hover:scale-110"
+                  }`}
               />
               <span className={`font-medium ${isActive ? "font-semibold" : ""}`}>
                 {label}
@@ -72,10 +87,23 @@ export default function Sidebar() {
       </div>
 
       <div className="p-4 border-t border-gray-100">
-        <button className="flex items-center gap-3 w-full px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl transition-colors font-medium">
-          <LogOut size={22} />
-          <span>Log Out</span>
-        </button>
+        {user ? (
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 w-full px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl transition-colors font-medium"
+          >
+            <LogOut size={22} />
+            <span>Log Out</span>
+          </button>
+        ) : (
+          <Link
+            href="/login"
+            className="flex items-center gap-3 w-full px-4 py-3 text-blue-600 hover:bg-blue-50 rounded-xl transition-colors font-medium"
+          >
+            <LogOut size={22} className="rotate-180" />
+            <span>Sign In</span>
+          </Link>
+        )}
       </div>
     </aside>
   );

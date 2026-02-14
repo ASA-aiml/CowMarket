@@ -6,12 +6,27 @@ import {
   integer,
   varchar,
   foreignKey,
+  boolean,
 } from "drizzle-orm/pg-core";
 
 // -------------------- Users --------------------
 export const users = pgTable("users", {
   uid: varchar("uid", { length: 255 }).primaryKey(),
+  email: varchar("email", { length: 255 }),
+  phoneNumber: varchar("phone_number", { length: 20 }),
+  displayName: varchar("display_name", { length: 255 }),
+  photoURL: text("photo_url"),
+  phoneVerified: boolean("phone_verified").default(false),
+  authProvider: varchar("auth_provider", { length: 50 }), // 'google', 'email', 'phone'
   userRole: varchar("user_role", { length: 50 }).notNull(),
+  // Location tracking
+  latitude: varchar("latitude", { length: 50 }),
+  longitude: varchar("longitude", { length: 50 }),
+  city: varchar("city", { length: 100 }),
+  country: varchar("country", { length: 100 }),
+  locationUpdatedAt: timestamp("location_updated_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 
@@ -90,7 +105,7 @@ export const projectOptions = pgTable("project_options", {
   }),
 }));
 
-  
+
 // import {
 //   pgTable,
 //   serial,
@@ -153,4 +168,3 @@ export const projectOptions = pgTable("project_options", {
 //     categoryId: integer("category_id").references(() => categories.categoryId).notNull(),
 //     optionId: integer("option_id").references(() => categoryOptionValues.optionId).notNull(),
 //   });
-  

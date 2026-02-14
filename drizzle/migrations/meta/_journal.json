@@ -8,6 +8,20 @@
       "when": 1758032247653,
       "tag": "0000_square_hemingway",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1770909668709,
+      "tag": "0001_clever_black_bird",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1770910461573,
+      "tag": "0002_first_warlock",
+      "breakpoints": true
     }
   ]
 }

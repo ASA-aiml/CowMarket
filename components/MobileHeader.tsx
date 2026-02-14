@@ -1,9 +1,12 @@
 "use client";
 
-import { Bell, MapPin, Settings } from "lucide-react";
+import { Bell, MapPin } from "lucide-react";
 import Link from "next/link";
+import ProfileAvatar from "./ProfileAvatar";
+import { useAuth } from "@/lib/contexts/AuthContext";
 
 export default function MobileHeader() {
+  const { user } = useAuth();
   return (
     <header className="sticky top-0 z-40 w-full bg-white/80 backdrop-blur-md border-b border-gray-100 md:hidden">
       <div className="flex items-center justify-between px-4 h-14">
@@ -24,11 +27,9 @@ export default function MobileHeader() {
         {/* Right: Actions */}
         <div className="flex items-center gap-3">
           <Link href="/notifications" className="text-gray-600 hover:text-gray-900">
-             <Bell size={20} />
+            <Bell size={20} />
           </Link>
-          <Link href="/settings" className="text-gray-600 hover:text-gray-900">
-            <Settings size={20} />
-          </Link>
+          {user && <ProfileAvatar />}
         </div>
       </div>
     </header>
