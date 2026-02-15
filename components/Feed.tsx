@@ -7,6 +7,7 @@ import FilterBar from "@/components/FilterBar";
 import FilterModal from "@/components/FilterModal";
 import { getListings } from "@/app/actions/listings";
 import { Loader2 } from "lucide-react";
+import ListingSkeleton from "@/components/ListingSkeleton";
 
 interface FeedProps {
     initialListings: any[];
@@ -105,6 +106,8 @@ export default function Feed({ initialListings }: FeedProps) {
         setLoading(false);
     };
 
+    // ... inside Feed component
+
     return (
         <>
             <FilterBar
@@ -115,16 +118,25 @@ export default function Feed({ initialListings }: FeedProps) {
 
             <div className="max-w-7xl mx-auto px-4 py-6 pb-24 md:pb-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {/* Show listings */}
                     {listings.map((listing, index) => (
                         <ListingCard key={`${listing.id}-${index}`} listing={listing} />
                     ))}
+
+                    {/* Show skeletons if loading */}
+                    {loading && (
+                        <>
+                            <ListingSkeleton />
+                            <ListingSkeleton />
+                            <ListingSkeleton />
+                            <ListingSkeleton />
+                        </>
+                    )}
                 </div>
 
-                {/* Loading State / Trigger */}
-                {(hasMore || loading) && (
-                    <div ref={ref} className="py-8 flex justify-center">
-                        {loading && <Loader2 className="animate-spin text-primary-600" />}
-                    </div>
+                {/* Loading State / Trigger used to be here, now integrated into grid above for smoothness */}
+                {(hasMore && !loading) && (
+                    <div ref={ref} className="py-8 flex justify-center h-10" />
                 )}
 
                 {!hasMore && listings.length > 0 && (
