@@ -5,7 +5,6 @@ import Navbar from '@/components/Navbar';
 import ProjectGrid from '@/components/repeto/ProjectGrid';
 import FilterSection from '@/components/repeto/FilterSection';
 import TabSection from '@/components/repeto/TabSection';
-import LoadingScreen from "@/components/loadingScrenn";
 import Link from 'next/link';
 
 export default function AdminDashboard() {
@@ -25,7 +24,7 @@ export default function AdminDashboard() {
   };
 
   if (loading) {
-    return <LoadingScreen />;
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
 
   return (
@@ -51,4 +50,4 @@ export default function AdminDashboard() {
       </div>
     </main>
   );
-} 
+}

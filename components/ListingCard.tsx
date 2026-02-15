@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Heart, MessageCircle, Phone, MapPin, PlayCircle } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
+import { motion } from "framer-motion";
 
 interface ListingCardProps {
     listing: {
@@ -44,10 +45,17 @@ export default function ListingCard({ listing }: ListingCardProps) {
         }
     };
 
-    // ... (imports)
+
 
     return (
-        <div className="glass-card overflow-hidden hover:shadow-2xl transition-all duration-300 group cursor-pointer relative h-full flex flex-col rounded-3xl border border-white/60">
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            whileHover={{ y: -8, scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            className="glass-card overflow-hidden hover:shadow-2xl transition-all duration-300 group cursor-pointer relative h-full flex flex-col rounded-3xl border border-white/60"
+        >
             <Link href={`/listing/${listing.id}`} className="flex-1 flex flex-col">
                 {/* Media Container - Reduced height on mobile (aspect-video) */}
                 <div
@@ -89,7 +97,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
 
                     {/* Gradient overlay - now Green/Dark Green instead of pure black */}
                     <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-emerald-950/90 via-emerald-900/40 to-transparent text-white pt-10 z-10">
-                        <h3 className="font-bold text-xl drop-shadow-md">₹{parseFloat(listing.price).toLocaleString()}</h3>
+                        <h3 className="font-bold text-xl drop-shadow-md text-glow">₹{parseFloat(listing.price).toLocaleString()}</h3>
                     </div>
                 </div>
 
@@ -143,6 +151,6 @@ export default function ListingCard({ listing }: ListingCardProps) {
                     <span>{t('call')}</span>
                 </button>
             </div>
-        </div>
+        </motion.div>
     );
 }
