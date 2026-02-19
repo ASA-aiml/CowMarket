@@ -1,17 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { bottomTabs } from "@/data/nav";
-import { Settings, LogOut, Bell } from "lucide-react";
-
+import { Settings, LogOut, LogIn, Bell } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { useAuth } from "@/context/AuthContext";
+import { signOutUser } from "@/lib/firebase/auth";
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { t } = useLanguage();
+  const { user } = useAuth();
 
-  // Map labels to translation keys (Reuse logic from BottomNavBar essentially)
+  const handleLogout = async () => {
+    try {
+      await signOutUser();
+      router.push("/login");
+    } catch (error) {
+      console.error("Failed to log out:", error);
+    }
+  };
+
   const getLabel = (label: string) => {
     const lower = label.toLowerCase();
     if (lower === 'home') return t('home');
@@ -19,9 +30,16 @@ export default function Sidebar() {
     if (lower === 'scan') return t('scan');
     if (lower === 'product') return t('product');
     if (lower === 'learn') return t('learn');
-    // Account items if labels were passed, but they are hardcoded below
     return label;
   };
+
+  const displayName = user?.displayName || user?.email?.split("@")[0] || "";
+  const initials = displayName
+    .split(" ")
+    .map((n: string) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
 
   return (
     <aside className="hidden md:flex flex-col w-64 h-screen fixed inset-y-0 left-0 glass-panel border-r border-white/40 z-50 rounded-none shadow-none">
@@ -30,7 +48,7 @@ export default function Sidebar() {
           O
         </div>
         <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600 text-glow">
-          OlexCows
+          Crowed
         </span>
       </div>
 
@@ -70,25 +88,63 @@ export default function Sidebar() {
         </div>
         <Link
           href="/settings"
-          className="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-500 hover:bg-white/40 hover:text-emerald-800 transition-all font-medium"
+          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium ${pathname === "/settings"
+            ? "bg-emerald-50/80 text-emerald-700 shadow-sm border border-emerald-100"
+            : "text-neutral-500 hover:bg-white/40 hover:text-emerald-800"
+            }`}
         >
           <Settings size={22} />
-          <span>Settings</span>
+          <span>{t('settings')}</span>
         </Link>
         <Link
           href="/notifications"
           className="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-500 hover:bg-white/40 hover:text-emerald-800 transition-all font-medium"
         >
           <Bell size={22} />
-          <span>Notifications</span>
+          <span>{t('notifications')}</span>
         </Link>
       </div>
 
+      {/* User info + Logout */}
       <div className="p-4 border-t border-white/20">
-        <button className="flex items-center gap-3 w-full px-4 py-3 text-red-500 hover:bg-red-50/50 rounded-xl transition-colors font-medium hover:shadow-sm">
-          <LogOut size={22} />
-          <span>Log Out</span>
-        </button>
+        {user ? (
+          <div>
+            {/* User profile mini */}
+            <div className="flex items-center gap-3 px-4 py-3 mb-2">
+              {user.photoURL ? (
+                <img
+                  src={user.photoURL}
+                  alt={displayName}
+                  className="w-9 h-9 rounded-full object-cover ring-2 ring-emerald-200"
+                  referrerPolicy="no-referrer"
+                />
+              ) : (
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-xs">
+                  {initials}
+                </div>
+              )}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-neutral-800 truncate">{displayName}</p>
+                <p className="text-xs text-neutral-400 truncate">{user.email}</p>
+              </div>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-3 w-full px-4 py-3 text-red-500 hover:bg-red-50/50 rounded-xl transition-colors font-medium hover:shadow-sm"
+            >
+              <LogOut size={20} />
+              <span>{t('logOut')}</span>
+            </button>
+          </div>
+        ) : (
+          <Link
+            href="/login"
+            className="flex items-center gap-3 w-full px-4 py-3 text-emerald-600 hover:bg-emerald-50/50 rounded-xl transition-colors font-medium hover:shadow-sm"
+          >
+            <LogIn size={22} />
+            <span>{t('signIn')}</span>
+          </Link>
+        )}
       </div>
     </aside>
   );

@@ -5,6 +5,7 @@ import BottomNavBar from "@/components/bottomNavbar";
 import Sidebar from "@/components/Sidebar";
 import MobileHeader from "@/components/MobileHeader";
 import { LanguageProvider } from "@/context/LanguageContext";
+import { AuthProvider } from "@/context/AuthContext";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -27,20 +28,22 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
+        <html lang="en" suppressHydrationWarning>
             <body
                 suppressHydrationWarning={true}
                 className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 text-gray-900`}
             >
                 <LanguageProvider>
-                    <Sidebar />
-                    <div className="flex flex-col min-h-screen md:pl-64">
-                        <MobileHeader />
-                        <main className="flex-1 md:pb-0">
-                            {children}
-                        </main>
-                        <BottomNavBar />
-                    </div>
+                    <AuthProvider>
+                        <Sidebar />
+                        <div className="flex flex-col min-h-screen md:pl-64">
+                            <MobileHeader />
+                            <main className="flex-1 md:pb-0">
+                                {children}
+                            </main>
+                            <BottomNavBar />
+                        </div>
+                    </AuthProvider>
                 </LanguageProvider>
             </body>
         </html>

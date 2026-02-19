@@ -16,5 +16,5 @@ if (!admin.apps.length) {
   }
 }
 
-export const adminAuth = admin.auth();
-export const adminFirestore = admin.firestore();
+export const adminAuth = admin.apps.length ? admin.auth() : null;
+export const adminFirestore = admin.apps.length ? admin.firestore() : null;
